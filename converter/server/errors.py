@@ -1,0 +1,12 @@
+# api errors
+ERROR_INVALID_INPUT = 1
+
+
+ERROR_DESCRIPTIONS = {
+    ERROR_INVALID_INPUT: 'Invalid input format.',
+}
+
+
+ERROR_HTTP_STATUSES = {
+    ERROR_INVALID_INPUT: 400,
+}
