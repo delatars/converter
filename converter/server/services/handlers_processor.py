@@ -1,8 +1,12 @@
+import logging
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 from converter.server.responses import error
 from converter.server.errors import ERROR_NOT_IMPLEMENTED
+
+
+logger = logging.getLogger("HandlersProcessor")
 
 
 class HandlersProcessor(BaseHTTPRequestHandler):
@@ -27,6 +31,12 @@ class HandlersProcessor(BaseHTTPRequestHandler):
         self.query = parse_qs(uri.query)
         return True
 
+    def log_message(self, format, *args):
+        message = ("%s - - %s\n" %
+                   (self.address_string(),
+                    format%args))
+        logger.debug(message)
+
     def _process_response(self, response):
         self.send_response(response.status)
         for header in response.headers:
@@ -35,6 +45,7 @@ class HandlersProcessor(BaseHTTPRequestHandler):
         self.wfile.write(response.body)
 
     def do_GET(self):
+        # We could make a Request object instead of self and fill it of usefull attributes.
         response = self.routers._process_request(self)
         self._process_response(response)
 
