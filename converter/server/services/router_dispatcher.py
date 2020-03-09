@@ -1,8 +1,6 @@
-from http.server import BaseHTTPRequestHandler
-from urllib.parse import urlparse
-
-from .responses import error, JsonResponse
-from .errors import ERROR_INVALID_INPUT
+from converter.server.responses import error, JsonResponse
+from converter.server.errors import ERROR_NOT_FOUND
+from .handlers_processor import HandlersProcessor
 
 
 class HandlerError(Exception):
@@ -22,14 +20,13 @@ class RoutersDispatcher:
             "PUT": {},
         }
 
-    def process_request(self, request: BaseHTTPRequestHandler) -> JsonResponse:
-        method, path, _ = request.requestline.split()
-        uri = urlparse(path)
+    def _process_request(self, request: HandlersProcessor) -> JsonResponse:
         try:
-            handler = self._routers[method][uri.path]
+            handler = self._routers[request.http_method][request.path]
         except KeyError:
-            return error(ERROR_INVALID_INPUT, f"No such route: {method} {uri.path}")
-        result = handler(self)
+            return error(ERROR_NOT_FOUND)
+        # we could make a middlewares processing there
+        result = handler(request)
         if not isinstance(result, JsonResponse):
             raise HandlerError(f"{handler.__name__}: Wrong return value :"
                                f" Handlers must return {JsonResponse} object")

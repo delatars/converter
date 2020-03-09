@@ -1,11 +1,12 @@
-from .router_dispatcher import RoutersDispatcher
-from .handlers.handlers_processor import HandlersProcessor
-from .handlers import root
+from converter.server.services import (
+    RoutersDispatcher, HandlersProcessor, CurrencyConverter
+)
+from converter.server.routes import setup_routes
 
 
 def setup_app():
     handlers_processor = HandlersProcessor(RoutersDispatcher())
+    handlers_processor.app["CurrencyConverter"] = CurrencyConverter()
+    setup_routes(handlers_processor)
 
-    handlers_processor.routers.add_get("/", root)
     return handlers_processor
-
