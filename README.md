@@ -32,12 +32,12 @@ Run:
 
 
 ### Api
-GET `{{url}}/currencies[?currency]` - get all available currencies
- - parameter(optional): **currency** - get list of specified currencies
+- **GET** `{{url}}/currencies[?currency={eur}&currency={usd}]` - get all available currencies.  
+  - parameter(optional): **currency** - set currency name to get.
  
-GET `{{url}}/currencies/convert[?currency&count&convert_to]` - convert currency
- - parameter: **currency**
- - parameter: **count**
- - parameter: **convert_to**
+- **GET** `{{url}}/currencies/convert?currency={eur}&count={100}&convert_to={rub}` - convert currency
+  - parameter: **currency** - set convertible currency name.
+  - parameter: **count** - set convertible currency count.
+  - parameter: **convert_to** - set name of the currency to be converted.
 
    
